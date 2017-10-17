@@ -64,7 +64,6 @@ class Playfair():
         """
         string = self.remove_punctuation(string)
         if len(string) % 2 == 1:
-            print(string)
             string += 'X'
         ret = ''
         for c in range(0, len(string), 2):

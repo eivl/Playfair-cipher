@@ -28,12 +28,13 @@ class Playfair():
                                (acol + 1) % 5] + self.newkey[brow * 5 +
                                                              (bcol + 1) % 5]
         elif acol == bcol:
-            return self.newkey[((arow + 1) % 5) * 5 + acol] + self.newkey[((brow + 1) % 5) * 5 + bcol]
+            return self.newkey[((arow + 1) % 5) * 5 +
+                               acol] + self.newkey[((brow + 1) % 5) * 5 + bcol]
         else:
             return self.newkey[arow * 5 + bcol] + self.newkey[brow * 5 + acol]
 
     def decipher_pair(self, a, b):
-        assert a != b, ('two of the same letters occurred together,'
+        assert a != b, ('two of the same letters occurred together, '
                         'illegal in playfair')
         arow, acol = int(self.newkey.index(a) / 5), self.newkey.index(a) % 5
         brow, bcol = int(self.newkey.index(b) / 5), self.newkey.index(b) % 5

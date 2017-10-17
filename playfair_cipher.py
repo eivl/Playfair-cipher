@@ -24,26 +24,34 @@ class Playfair():
         arow, acol = int(self.newkey.index(a) / 5), self.newkey.index(a) % 5
         brow, bcol = int(self.newkey.index(b) / 5), self.newkey.index(b) % 5
         if arow == brow:
-            return self.newkey[arow * 5 + (acol + 1) % 5] + self.newkey[brow * 5 + (bcol + 1) % 5]
+            return self.newkey[arow * 5 +
+                               (acol + 1) % 5] + self.newkey[brow * 5 +
+                                                             (bcol + 1) % 5]
         elif acol == bcol:
             return self.newkey[((arow + 1) % 5) * 5 + acol] + self.newkey[((brow + 1) % 5) * 5 + bcol]
         else:
             return self.newkey[arow * 5 + bcol] + self.newkey[brow * 5 + acol]
 
     def decipher_pair(self, a, b):
-        assert a != b, 'two of the same letters occurred together, illegal in playfair'
+        assert a != b, ('two of the same letters occurred together,'
+                        'illegal in playfair')
         arow, acol = int(self.newkey.index(a) / 5), self.newkey.index(a) % 5
         brow, bcol = int(self.newkey.index(b) / 5), self.newkey.index(b) % 5
         if arow == brow:
-            return self.newkey[arow * 5 + (acol - 1) % 5] + self.newkey[brow * 5 + (bcol - 1) % 5]
+            return self.newkey[arow * 5 +
+                               (acol - 1) % 5] + self.newkey[brow * 5 +
+                                                             (bcol - 1) % 5]
         elif acol == bcol:
-            return self.newkey[((arow - 1) % 5) * 5 + acol] + self.newkey[((brow - 1) % 5) * 5 + bcol]
+            return self.newkey[((arow - 1) % 5) * 5 +
+                               acol] + self.newkey[((brow - 1) % 5) * 5 + bcol]
         else:
             return self.newkey[arow * 5 + bcol] + self.newkey[brow * 5 + acol]
 
     def encipher(self, string):
-        """Encipher string using Playfair cipher according to initialised key. Punctuation and whitespace
-        are removed from the input. If the input plaintext is not an even number of characters, an 'X' will be appended.
+        """Encipher string using Playfair cipher according to initialised key.
+        Punctuation and whitespace
+        are removed from the input. If the input plaintext is not an even
+        number of characters, an 'X' will be appended.
         :param string: The string to encipher.
         :returns: The enciphered string.
         """
@@ -57,8 +65,11 @@ class Playfair():
         return ret
 
     def decipher(self, string):
-        """Decipher string using Playfair cipher according to initialised key. Punctuation and whitespace
-        are removed from the input. The ciphertext should be an even number of characters. If the input ciphertext is not an even number of characters, an 'X' will be appended.
+        """Decipher string using Playfair cipher according to initialised key.
+        Punctuation and whitespace
+        are removed from the input. The ciphertext should be an even number of
+        characters. If the input ciphertext is not an even number of
+        characters, an 'X' will be appended.
         :param string: The string to decipher.
         :returns: The deciphered string.
         """

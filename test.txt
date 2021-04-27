@@ -1,0 +1,106 @@
+import re
+
+
+class Playfair():
+    """The Playfair Cipher enciphers pairs of characters, the key consists of
+    a keysquare 25 characters in length.
+    More information about the algorithm can be
+    found at http://www.practicalcryptography.com/ciphers/playfair-cipher/.
+    :param key: The keysquare, as a 25 character string.
+    :param newkey: The key to make an unique keysquare
+    """
+    def __init__(self, newkey, key='ABCDEFGHIKLMNOPQRSTUVWXYZ'):
+        newkey = newkey.replace(' ', '').upper().replace('J', 'I')
+        newkey = ''.join([newkey, key])
+        self.newkey = (sorted(set(newkey), key=newkey.index))
+
+    def remove_punctuation(self, text, filter='[^A-Z]'):
+        return re.sub(filter, '', text.upper())
+
+    def encipher_pair(self, a, b):
+        if a == b:
+            b = 'X'
+        arow, acol = int(self.newkey.index(a) / 5), self.newkey.index(a) % 5
+        brow, bcol = int(self.newkey.index(b) / 5), self.newkey.index(b) % 5
+        if arow == brow:
+            return self.newkey[arow * 5 +
+                               (acol + 1) % 5] + self.newkey[brow * 5 +
+                                                             (bcol + 1) % 5]
+        elif acol == bcol:
+            return self.newkey[((arow + 1) % 5) * 5 +
+                               acol] + self.newkey[((brow + 1) % 5) * 5 + bcol]
+        else:
+            return self.newkey[arow * 5 + bcol] + self.newkey[brow * 5 + acol]
+
+    def decipher_pair(self, a, b):
+        assert a != b, ('two of the same letters occurred together, '
+                        'illegal in playfair')
+        arow, acol = int(self.newkey.index(a) / 5), self.newkey.index(a) % 5
+        brow, bcol = int(self.newkey.index(b) / 5), self.newkey.index(b) % 5
+        if arow == brow:
+            return self.newkey[arow * 5 +
+                               (acol - 1) % 5] + self.newkey[brow * 5 +
+                                                             (bcol - 1) % 5]
+        elif acol == bcol:
+            return self.newkey[((arow - 1) % 5) * 5 +
+                               acol] + self.newkey[((brow - 1) % 5) * 5 + bcol]
+        else:
+            return self.newkey[arow * 5 + bcol] + self.newkey[brow * 5 + acol]
+
+    def encipher(self, string):
+        """Encipher string using Playfair cipher according to initialised key.
+        Punctuation and whitespace
+        are removed from the input. If the input plaintext is not an even
+        number of characters, an 'X' will be appended.
+        :param string: The string to encipher.
+        :returns: The enciphered string.
+        """
+        string = self.remove_punctuation(string)
+        string = re.sub(r'[J]', 'I', string)
+        if len(string) % 2 == 1:
+            string += 'X'
+        ret = ''
+        for c in range(0, len(string), 2):
+            ret += self.encipher_pair(string[c], string[c + 1])
+        return ret
+
+    def decipher(self, string):
+        """Decipher string using Playfair cipher according to initialised key.
+        Punctuation and whitespace
+        are removed from the input. The ciphertext should be an even number of
+        characters. If the input ciphertext is not an even number of
+        characters, an 'X' will be appended.
+        :param string: The string to decipher.
+        :returns: The deciphered string.
+        """
+        string = self.remove_punctuation(string)
+        if len(string) % 2 == 1:
+            string += 'X'
+        ret = ''
+        for c in range(0, len(string), 2):
+            ret += self.decipher_pair(string[c], string[c + 1])
+        return ret
+
+if __name__ == '__main__':
+    while True:
+        print("Would you like to encode or decode")
+        print("press [E] to encode, [D] to decode")
+        inputselect = input("Pick an option between E and D:")
+        if inputselect.lower() not in ('e', 'd'):
+            print("Not an appropriate choice.")
+        else:
+            break
+
+    if inputselect == 'e':
+        print("")
+        keyword = input('Enter a keyword: ')
+        message = input('Enter string to encode: ')
+        playfair_object = Playfair(keyword)
+        print(playfair_object.encipher(message))
+
+    if inputselect == 'd':
+        print("")
+        keyword = input('Enter a keyword: ')
+        message = input('Enter string to decode: ')
+        playfair_object = Playfair(keyword)
+        print(playfair_object.decipher(message))
